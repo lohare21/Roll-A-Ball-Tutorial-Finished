@@ -9,8 +9,8 @@ public class PlayerController : MonoBehaviour {
 	// Create public variables for player speed, and for the Text UI game objects
 	public float speed;
 	public TextMeshProUGUI countText;
-	public GameObject winTextObject;
     public Transform respawnPoint;
+    public MenuController menuController;
 
         private float movementX;
         private float movementY;
@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour {
 		count = 0;
 
 		SetCountText ();
-        winTextObject.SetActive(false);
+        //winTextObject.SetActive(false);
 	}
 
     private void Update()
@@ -62,7 +62,8 @@ public class PlayerController : MonoBehaviour {
     {
         if(collision.gameObject.CompareTag("Enemy"))
         {
-            respawn();
+            //respawn();
+            EndGame();
         } 
     }
 
@@ -79,10 +80,11 @@ public class PlayerController : MonoBehaviour {
 	{
 		countText.text = "Count: " + count.ToString();
 
-		if (count >= 13) 
+		if (count >= 14) 
 		{
                     // Set the text value of your 'winText'
-                    winTextObject.SetActive(true);
+                    //winTextObject.SetActive(true);
+                    menuController.WinGame();
 		}
 	}
 
@@ -95,4 +97,9 @@ public class PlayerController : MonoBehaviour {
 
     }
 
+    void EndGame()
+    {
+        menuController.LoseGame();
+        gameObject.SetActive(false);
+    }
 }
