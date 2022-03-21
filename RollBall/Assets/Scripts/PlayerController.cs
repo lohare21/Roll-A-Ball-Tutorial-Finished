@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour {
 	public float speed;
 	public TextMeshProUGUI countText;
 	public GameObject winTextObject;
+    public Transform respawnPoint;
 
         private float movementX;
         private float movementY;
@@ -20,17 +21,20 @@ public class PlayerController : MonoBehaviour {
 	// At the start of the game..
 	void Start ()
 	{
-		// Assign the Rigidbody component to our private rb variable
 		rb = GetComponent<Rigidbody>();
-
-		// Set the count to zero 
 		count = 0;
 
 		SetCountText ();
-
-                // Set the text property of the Win Text UI to an empty string, making the 'You Win' (game over message) blank
-                winTextObject.SetActive(false);
+        winTextObject.SetActive(false);
 	}
+
+    private void Update()
+    {
+        if (transform.position.y < -40)
+        {
+            respawn();
+        }
+    }
 
 	void FixedUpdate ()
 	{
@@ -54,6 +58,14 @@ public class PlayerController : MonoBehaviour {
 			SetCountText ();
 		}
 	}
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Enemy"))
+        {
+            respawn();
+        } 
+    }
+
 
         void OnMove(InputValue value)
         {
@@ -73,4 +85,14 @@ public class PlayerController : MonoBehaviour {
                     winTextObject.SetActive(true);
 		}
 	}
+
+    void respawn()
+    {
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        rb.Sleep();
+        transform.position = respawnPoint.position;
+
+    }
+
 }
